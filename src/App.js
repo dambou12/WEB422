@@ -1,24 +1,62 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import { Route, Switch, Redirect } from 'react-router-dom';
+import Products from './Products';
+import Product from './Product';
+import About from './About';
+import NotFound from './NotFound';
+import { LinkContainer } from "react-router-bootstrap";
+import { Navbar, Nav, NavItem } from 'react-bootstrap';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Navbar inverse collapseOnSelect fixedTop>
+        <Navbar.Header>
+          <LinkContainer to="/">
+            <Navbar.Brand>
+              WEB422 - React Routing
+            </Navbar.Brand>
+          </LinkContainer>
+          <Navbar.Toggle />
+        </Navbar.Header>
+        <Navbar.Collapse>
+          <Nav>
+            <LinkContainer to="/Products">
+              <NavItem eventKey={1}>Products</NavItem>
+            </LinkContainer>
+            <LinkContainer to="/About">
+              <NavItem eventKey={2}>About</NavItem>
+            </LinkContainer>
+          </Nav>
+        </Navbar.Collapse>
+      </Navbar>
+
+      <br /><br /><br />
+
+      <div className="container">
+        <div className="row">
+          <div className="col-md-12">
+            <Switch>
+              <Route exact path='/' render={() => (
+                <Redirect push to={"/Products"} />
+              )} />
+              <Route exact path='/Products' render={() => (
+                <Products />
+              )} />
+              <Route path='/Product/:id' render={(props) => (
+                <Product id={props.match.params.id} />
+              )} />
+              <Route exact path='/About' render={() => (
+                <About />
+              )} />
+              <Route render={() => (
+                <NotFound />
+              )} />
+            </Switch>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
