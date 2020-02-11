@@ -12,7 +12,7 @@ class Sales extends Component {
   getData = (page) => {
     return new Promise((resolve, reject) => {
       fetch(
-        `https://still-wave-48213.herokuapp.com/api/sales?page=${page}&perPage=10`
+        `https://peaceful-chamber-75210.herokuapp.com/api/sales?page=${page}&perPage=10`
       )
         .then((response) => resolve(response.json()))
         .catch((err) => reject(err))
