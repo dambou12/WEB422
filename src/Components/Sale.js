@@ -13,7 +13,7 @@ class Sale extends Component {
   getData = async () => {
     const { id, viewedSale } = this.props
 
-    await fetch(`https://still-wave-48213.herokuapp.com/api/sales/${id}`)
+    await fetch(`https://peaceful-chamber-75210.herokuapp.com/api/sales/${id}`)
       .then((response) => response.json())
       .then((sale) => {
         this.setState({ sale, loading: false })
