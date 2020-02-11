@@ -3,7 +3,7 @@ import './App.css';
 import { Link,Route, Switch, Redirect } from 'react-router-dom';
 import Sales from './Components/Sales';
 import Sale from './Components/Sale';
-import About from './About';
+
 import NotFound from './Components/NotFound';
 import { LinkContainer } from "react-router-bootstrap";
 import { Navbar, Nav, NavItem, NavDropdown, MenuItem, FormGroup, FormControl, Grid, Row, Col } from 'react-bootstrap';
