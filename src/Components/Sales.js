@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 import { Table, Pagination } from 'react-bootstrap'
-//import ReactLoading from 'react-loading'
+import ReactLoading from 'react-loading'
 
 class Sales extends Component {
   state = {
