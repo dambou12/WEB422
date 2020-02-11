@@ -1,14 +1,21 @@
-import React from 'react'
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react'
+import { withRouter, Redirect } from 'react-router-dom'
 
-function NotFound() {
-    return (
-        <div>
-            <h1>Page Not Found</h1>
-            <br />
-            <Link to="/">Return Home</Link>
-        </div>
-    );
-};
+const NotFound = () => {
+  const [redirect, setRedirect] = useState(false)
 
-export default NotFound;
+  useEffect(() => {
+    setTimeout(() => setRedirect(true), 2000)
+  }, [])
+
+  return (
+    <div>
+      <h1>Not Found</h1>
+      <p>We can't find what you're looking for</p>
+      <span>Redirecting back</span>
+      {redirect && <Redirect to='/' />}
+    </div>
+  )
+}
+
+export default withRouter(NotFound)

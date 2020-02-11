@@ -1,45 +1,88 @@
-import React from 'react';
-import {Link} from 'react-router-dom';
+import React, { Component } from 'react'
+import { withRouter } from 'react-router-dom'
+import { Table, Pagination } from 'react-bootstrap'
+import ReactLoading from 'react-loading'
 
-class Products extends React.Component{
-    
-    constructor(props){
-        super(props);
-        this.state = {
-            products: [],
-            loading: true
-        }
+class Sales extends Component {
+  state = {
+    sales: [],
+    currentPage: 1
+  }
+
+  getData = (page) => {
+    return new Promise((resolve, reject) => {
+      fetch(
+        `https://still-wave-48213.herokuapp.com/api/sales?page=${page}&perPage=10`
+      )
+        .then((response) => resolve(response.json()))
+        .catch((err) => reject(err))
+    })
+  }
+
+  async componentDidMount() {
+    await this.getData(this.state.currentPage)
+      .then((sales) => this.setState({ sales }))
+      .catch((err) => console.error(err))
+  }
+
+  previousPage = async () => {
+    const { currentPage } = this.state
+    if (currentPage > 1) {
+      await this.getData(currentPage - 1)
+        .then((sales) => this.setState({ sales, currentPage: currentPage - 1 }))
+        .catch((err) => console.error(err))
     }
+  }
 
-    componentDidMount(){
+  nextPage = async () => {
+    const { currentPage } = this.state
+    this.getData(currentPage + 1)
+      .then((sales) => this.setState({ sales, currentPage: currentPage + 1 }))
+      .catch((err) => console.error(err))
+  }
 
-        fetch("https://reqres.in/api/unknown")
-        .then(res=>res.json())
-        .then(data => {
-            this.setState({
-                products: data.data,
-                loading: false  // no longer loading
-            })
-        })
-    }
+  render() {
+    if (this.state.sales.length > 0) {
+      return (
+        <div>
+          <Table hover>
+            <thead>
+              <tr>
+                <th>Customer</th>
+                <th>Store Location</th>
+                <th>Number of Items</th>
+                <th>Sale Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {this.state.sales.map((sale) => (
+                <tr
+                  key={sale._id}
+                  onClick={() => this.props.history.push(`/Sale/${sale._id}`)}
+                >
+                  <td>{sale.customer.email}</td>
+                  <td>{sale.storeLocation}</td>
+                  <td>{sale.items.length}</td>
+                  <td>{new Date(sale.saleDate).toLocaleDateString()}</td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
 
-    render(){
-        if(this.state.loading){
-            return null; // could have a loading spinner, etc here
-        }else{
-            return (
-                <div>
-                    <h1>Products</h1>
-                    <br />
-                    <div className="list-group">
-                        {this.state.products.map((prod)=>{
-                            return <Link key={prod.id} className="list-group-item" style={{backgroundColor: prod.color}} to={`/Product/${prod.id}`}>{prod.name}: {prod.year}</Link>
-                        })}
-                    </div>
-                </div>
-            );
-        }
-    }
-};
+          <Pagination>
+            <Pagination.Prev onClick={this.previousPage} />
+            <Pagination.Item>{this.state.currentPage}</Pagination.Item>
+            <Pagination.Next onClick={this.nextPage} />
+          </Pagination>
+        </div>
+      )
+    } else
+      return (
+        <div className='loaderContainer'>
+          <ReactLoading type='spin' color='red' className='loader' />
+        </div>
+      )
+  }
+}
 
-export default Products;
+export default withRouter(Sales)
