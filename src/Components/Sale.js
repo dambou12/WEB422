@@ -3,8 +3,8 @@ import React, { Component } from 'react';
 
 import { ListGroup, ListGroupItem, Table } from 'react-bootstrap';
 
-import ReactLoading from 'react-loading';
-import uuid from 'uuid/v4';
+// import ReactLoading from 'react-loading';
+// import uuid from 'uuid/v4';
 
 class Sale extends Component {
 
@@ -52,11 +52,7 @@ class Sale extends Component {
 
     render() {
       if (this.state.loading) {
-        return (
-          <div className='loaderContainer'>
-            <ReactLoading type='spin' color='red' className='loader' />
-          </div>
-        )
+        return null;
       } else if (this.state.sale._id) {
         const { sale } = this.state
         return (

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { Table, Pagination } from 'react-bootstrap';
-import ReactLoading from 'react-loading';
+//import ReactLoading from 'react-loading';
 
 class Sales extends Component {
 
@@ -32,9 +32,9 @@ class Sales extends Component {
       fetch(`https://peaceful-chamber-75210.herokuapp.com/api/sales?page=${page}&perPage=10`)
 
       .then((response) => {
-
+          
           return response.json();
-
+    
       })
 
       .then((myJson) => {
@@ -121,11 +121,7 @@ class Sales extends Component {
         </div>
       )
     } else
-      return (
-        <div className='loaderContainer'>
-          <ReactLoading type='spin' color='red' className='loader' />
-        </div>
-      )
+      return null;
   }
 }
 
