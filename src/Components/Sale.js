@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 
 import { ListGroup, ListGroupItem, Table } from 'react-bootstrap';
 
-
+import ReactLoading from 'react-loading';
+import uuid from 'uuid/v4';
 
 class Sale extends Component {
 
@@ -27,7 +28,7 @@ class Sale extends Component {
 
     componentDidMount() {
 
-        fetch(`https://arnin-web422-ass1.herokuapp.com/api/sales/${this.props.id}`)
+        fetch(`https://peaceful-chamber-75210.herokuapp.com/api/sales/${this.props.id}`)
 
         .then((response) => {
 

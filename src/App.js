@@ -14,9 +14,9 @@ import {
 import { Link, Switch, Redirect, Route, withRouter } from 'react-router-dom'
 import { LinkContainer } from 'react-router-bootstrap'
 
-import Sales from './Components/Sales'
-import Sale from './Components/Sale'
-import NotFound from './Components/NotFound'
+import Sales from './components/Sales'
+import Sale from './components/Sale'
+import NotFound from './components/NotFound'
 import './App.css'
 
 class App extends Component {

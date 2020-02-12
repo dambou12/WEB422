@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import React from "React";
+
 
 
 class NotFound extends Component {
