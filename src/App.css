@@ -1,3 +1,5 @@
-table.table-hover:hover{
-  cursor:pointer;
+span.navbar-brand:hover{
+
+  cursor: pointer;
+
 }

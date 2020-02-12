@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import { ListGroup, ListGroupItem, Table } from 'react-bootstrap';
 
 // import ReactLoading from 'react-loading';
-// import uuid from 'uuid/v4';
+import uuid from 'uuid/v4';
 
 class Sale extends Component {
 
