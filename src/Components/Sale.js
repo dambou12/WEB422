@@ -1,104 +1,112 @@
 
-import React, { Component } from 'react'
-import { ListGroup, ListGroupItem, Table } from 'react-bootstrap'
-import ReactLoading from 'react-loading'
-import uuid from 'uuid/v4'
+import React, { Component } from 'react';
+
+import { ListGroup, ListGroupItem, Table } from 'react-bootstrap';
+
+
 
 class Sale extends Component {
-  state = {
-    sale: {},
-    loading: true
-  }
 
-  getData = async () => {
-    const { id, viewedSale } = this.props
+    constructor(props) {
 
-    await fetch(`https://peaceful-chamber-75210.herokuapp.com/api/sales/${id}`)
-      .then((response) => response.json())
-      .then((sale) => {
-        this.setState({ sale, loading: false })
-        viewedSale(id)
-      })
-      .catch((err) => console.error(err))
-  }
+        super(props);
 
-  async componentDidMount() {
-    await this.getData()
-  }
+        this.state = {
 
-  async componentDidUpdate(prevProps) {
-    if (this.props.id !== prevProps.id) {
-      this.setState({ loading: true })
-      await this.getData()
+            sale: {},
+
+            loading: true
+
+        };
+
     }
-  }
 
-  itemTotal = (items) => {
-    let total = 0
-    for (let item of items) {
-      total += item.price
+
+
+    // Component DidMount
+
+    componentDidMount() {
+
+        fetch(`https://arnin-web422-ass1.herokuapp.com/api/sales/${this.props.id}`)
+
+        .then((response) => {
+
+            return response.json();
+
+        })
+
+        .then((myJson) => {
+
+            this.setState({sale: myJson});
+
+            this.props.viewedSale(myJson._id)
+
+        });
+
     }
-    return total.toFixed(2)
-  }
 
-  render() {
-    if (this.state.loading) {
-      return (
-        <div className='loaderContainer'>
-          <ReactLoading type='spin' color='red' className='loader' />
-        </div>
-      )
-    } else if (this.state.sale._id) {
-      const { sale } = this.state
-      return (
-        <div>
-          <h1>Sale: {sale._id}</h1>
-          <h2>Customer</h2>
-          <ListGroup>
-            <ListGroupItem>
-              <strong>email:</strong> {sale.customer.email}
-            </ListGroupItem>
+    
 
-            <ListGroupItem>
-              <strong>age:</strong> {sale.customer.age}
-            </ListGroupItem>
+    // Render function
 
-            <ListGroupItem>
-              <strong>satisfaction:</strong> {sale.customer.satisfaction}
-            </ListGroupItem>
-          </ListGroup>
-
-          <h2>Items: ${this.itemTotal(sale.items)}</h2>
-
-          <Table>
-            <thead>
-              <tr>
-                <th>Product Name</th>
-                <th>Quantity</th>
-                <th>Price</th>
-              </tr>
-            </thead>
-            <tbody>
-              {sale.items.map(({ name, quantity, price }) => (
-                <tr key={uuid()}>
-                  <td>{name}</td>
-                  <td>{quantity}</td>
-                  <td>{price}</td>
+    render() {
+      if (this.state.loading) {
+        return (
+          <div className='loaderContainer'>
+            <ReactLoading type='spin' color='red' className='loader' />
+          </div>
+        )
+      } else if (this.state.sale._id) {
+        const { sale } = this.state
+        return (
+          <div>
+            <h1>Sale: {sale._id}</h1>
+            <h2>Customer</h2>
+            <ListGroup>
+              <ListGroupItem>
+                <strong>email:</strong> {sale.customer.email}
+              </ListGroupItem>
+  
+              <ListGroupItem>
+                <strong>age:</strong> {sale.customer.age}
+              </ListGroupItem>
+  
+              <ListGroupItem>
+                <strong>satisfaction:</strong> {sale.customer.satisfaction}
+              </ListGroupItem>
+            </ListGroup>
+  
+            <h2>Items: ${this.itemTotal(sale.items)}</h2>
+  
+            <Table>
+              <thead>
+                <tr>
+                  <th>Product Name</th>
+                  <th>Quantity</th>
+                  <th>Price</th>
                 </tr>
-              ))}
-            </tbody>
-          </Table>
-        </div>
-      )
-    } else {
-      return (
-        <div>
-          <h1>Unable to find Sale</h1>
-          <p>id: {this.props.id}</p>
-        </div>
-      )
+              </thead>
+              <tbody>
+                {sale.items.map(({ name, quantity, price }) => (
+                  <tr key={uuid()}>
+                    <td>{name}</td>
+                    <td>{quantity}</td>
+                    <td>{price}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </div>
+        )
+      } else {
+        return (
+          <div>
+            <h1>Unable to find Sale</h1>
+            <p>id: {this.props.id}</p>
+          </div>
+        )
+      }
     }
   }
-}
-
-export default Sale
+  
+  export default Sale

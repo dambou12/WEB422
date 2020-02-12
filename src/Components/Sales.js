@@ -4,41 +4,85 @@ import { Table, Pagination } from 'react-bootstrap'
 import ReactLoading from 'react-loading'
 
 class Sales extends Component {
-  state = {
-    sales: [],
-    currentPage: 1
+
+  constructor(props) {
+
+      super(props);
+
+      this.state = {
+
+          sales: [],
+
+          currentPage: 1
+
+      };
+
+      this.previousPage = this.previousPage.bind(this);
+
+      this.nextPage = this.nextPage.bind(this);
+
   }
 
-  getData = (page) => {
-    return new Promise((resolve, reject) => {
-      fetch(
-        `https://peaceful-chamber-75210.herokuapp.com/api/sales?page=${page}&perPage=10`
-      )
-        .then((response) => resolve(response.json()))
-        .catch((err) => reject(err))
-    })
+
+
+  // Utility method implementation
+
+  getData(page) {
+
+      fetch(`https://peaceful-chamber-75210.herokuapp.com/api/sales?page=${page}&perPage=10`)
+
+      .then((response) => {
+
+          return response.json();
+
+      })
+
+      .then((myJson) => {
+
+          this.setState({sales: myJson});
+
+      });
+
   }
 
-  async componentDidMount() {
-    await this.getData(this.state.currentPage)
-      .then((sales) => this.setState({ sales }))
-      .catch((err) => console.error(err))
+  
+
+  
+
+  // Component DidMount
+
+  componentDidMount() {
+
+      this.setState(this.getData(this.state.currentPage));
+
   }
 
-  previousPage = async () => {
-    const { currentPage } = this.state
-    if (currentPage > 1) {
-      await this.getData(currentPage - 1)
-        .then((sales) => this.setState({ sales, currentPage: currentPage - 1 }))
-        .catch((err) => console.error(err))
-    }
+  
+
+  // Previous Page
+
+  previousPage() {
+
+      if (this.state.currentPage > 1) {
+
+          this.getData(this.state.currentPage - 1);
+
+          this.setState({currentPage: this.state.currentPage - 1});
+
+      }
+
   }
 
-  nextPage = async () => {
-    const { currentPage } = this.state
-    this.getData(currentPage + 1)
-      .then((sales) => this.setState({ sales, currentPage: currentPage + 1 }))
-      .catch((err) => console.error(err))
+  
+
+  // Next Page
+
+  nextPage() {
+
+      this.getData(this.state.currentPage + 1);
+
+      this.setState({currentPage: this.state.currentPage + 1});
+
   }
 
   render() {
