@@ -29,10 +29,10 @@ class Sales extends Component {
 
 
     // Utility method implementation
-
+    //https://peaceful-chamber-75210.herokuapp.com/api/sales?page=${page}&perPage=10
     getData(page) {
 
-        fetch(`https://arnin-web422-ass1.herokuapp.com/api/sales?page=${page}&perPage=10`)
+        fetch(`https://peaceful-chamber-75210.herokuapp.com/api/sales?page=${page}&perPage=10`)
 
         .then((response) => {
 
