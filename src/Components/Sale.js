@@ -4,106 +4,214 @@ import React, { Component } from 'react';
 import { ListGroup, ListGroupItem, Table } from 'react-bootstrap';
 
 // import ReactLoading from 'react-loading';
-import uuid from 'uuid/v4';
+//import uuid from 'uuid/v4';
 
 class Sale extends Component {
 
-    constructor(props) {
+  constructor(props) {
 
-        super(props);
+      super(props);
 
-        this.state = {
+      this.state = {
 
-            sale: {},
+          sale: {},
 
-            loading: true
+          loading: true
 
-        };
-
-    }
+      };
 
 
 
-    // Component DidMount
+      this.itemTotal = this.itemTotal.bind(this);
 
-    componentDidMount() {
-
-        fetch(`https://peaceful-chamber-75210.herokuapp.com/api/sales/${this.props.id}`)
-
-        .then((response) => {
-
-            return response.json();
-
-        })
-
-        .then((myJson) => {
-
-            this.setState({sale: myJson});
-
-            this.props.viewedSale(myJson._id)
-
-        });
-
-    }
-
-    
-
-    // Render function
-
-    render() {
-      if (this.state.loading) {
-        return null;
-      } else if (this.state.sale._id) {
-        const { sale } = this.state
-        return (
-          <div>
-            <h1>Sale: {sale._id}</h1>
-            <h2>Customer</h2>
-            <ListGroup>
-              <ListGroupItem>
-                <strong>email:</strong> {sale.customer.email}
-              </ListGroupItem>
-  
-              <ListGroupItem>
-                <strong>age:</strong> {sale.customer.age}
-              </ListGroupItem>
-  
-              <ListGroupItem>
-                <strong>satisfaction:</strong> {sale.customer.satisfaction}
-              </ListGroupItem>
-            </ListGroup>
-  
-            <h2>Items: ${this.itemTotal(sale.items)}</h2>
-  
-            <Table>
-              <thead>
-                <tr>
-                  <th>Product Name</th>
-                  <th>Quantity</th>
-                  <th>Price</th>
-                </tr>
-              </thead>
-              <tbody>
-                {sale.items.map(({ name, quantity, price }) => (
-                  <tr key={uuid()}>
-                    <td>{name}</td>
-                    <td>{quantity}</td>
-                    <td>{price}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
-          </div>
-        )
-      } else {
-        return (
-          <div>
-            <h1>Unable to find Sale</h1>
-            <p>id: {this.props.id}</p>
-          </div>
-        )
-      }
-    }
   }
+
+
+
+  // Component didMount
+
+  componentDidMount() {
+
+      fetch(`https://peaceful-chamber-75210.herokuapp.com/api/sales/${this.props.id}`)
+
+      .then((response) => {
+
+          return response.json();
+
+      })
+
+      .then((data) => {
+
+          // If data existe push id into recentlyViewed
+
+          if (data._id) {
+
+              this.props.viewedSale(data._id);
+
+          }
+
+
+
+          this.setState({
+
+              sale: data,
+
+              loading: false
+
+          });
+
+      });
+
+  }
+
+
+
+  // Component didUpdate
+
+  componentDidUpdate(prevProps) {
+
+      if (prevProps.id !== this.props.id) {
+
+          this.setState({loading: true});
+
+
+
+          fetch(`https://peaceful-chamber-75210.herokuapp.com/api/sales/${this.props.id}`)
+
+          .then((response) => {
+
+              return response.json();
+
+          })
+
+          .then((data) => {
+
+              // If data existe push id into recentlyViewed
+
+              if (data._id) {
+
+                  this.props.viewedSale(data._id);
+
+              }
+
+
+
+              this.setState({
+
+                  sale: data,
+
+                  loading: false
+
+              });
+
+          });
+
+      }
+
+  }
+
+
+
+  // Method that calculates the total value of items, sum = price * quantity
+
+  itemTotal(items) {
+
+      let total = 0;
+
+      for (let i = 0; i < items.length; i++) {
+
+          total += items[i].price * items[i].quantity;
+
+      }
+
+      return total;
+
+  }
+
   
-  export default Sale
+
+  // Render function
+
+  render() {
+
+      if (this.state.loading) {
+
+          return null; // NOTE: This can be changed to render a <Loading /> Component for a better user experience
+
+      } else {
+
+          if (this.state.sale._id) {
+
+              return (
+
+                  <div>
+
+                      <h1>Sale: {this.state.sale._id}</h1>
+
+                      <h2>Customer</h2>
+
+                      <ListGroup>
+
+                          <ListGroupItem><strong>email:</strong> {this.state.sale.customer.email}</ListGroupItem>
+
+                          <ListGroupItem><strong>age:</strong> {this.state.sale.customer.age}</ListGroupItem>
+
+                          <ListGroupItem><strong>satisfaction:</strong> {this.state.sale.customer.satisfaction} / 5</ListGroupItem>
+
+                      </ListGroup>
+
+                      <h2> Items: ${this.itemTotal(this.state.sale.items).toFixed(2)}</h2>
+
+                      <Table>
+
+                          <thead>
+
+                              <tr>
+
+                                  <th>Product Name</th>
+
+                                  <th>Quantity</th>
+
+                                  <th>Price</th>
+
+                              </tr>
+
+                          </thead>
+
+                          <tbody>
+
+                              {this.state.sale.items.map((item, index) => (
+
+                                  <tr key={index}>
+
+                                      <td>{item.name}</td>
+
+                                      <td>{item.quantity}</td>
+
+                                      <td>${item.price}</td>
+
+                                  </tr>
+
+                              ))}
+
+                          </tbody>
+
+                      </Table>
+
+                  </div>);
+
+          } else {
+
+              return <div><h1>Unable to find Sale</h1><p>id: {this.props.id}</p></div>
+
+          }
+
+      }
+
+  }
+
+}
+
+
+
+export default Sale;
